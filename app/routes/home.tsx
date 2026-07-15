@@ -24,7 +24,7 @@ export default function Home() {
 
     const newItem ={
       id: newId, name, sourceImage: base64Image,
-      rendredimage: undefined,
+      renderedImage: undefined,
       timestamp:Date.now()
     }
 
@@ -44,7 +44,6 @@ export default function Home() {
         name
       }
     });
-
 
     return true;
   }
@@ -100,8 +99,8 @@ export default function Home() {
           </div>
 
           <div className="projects-grid">
-              {projects.map(({id, name, renderedImage, sourceImage, timestamp}) => (
-                  <div className="project-card group">
+               {projects.map(({id, name, renderedImage, sourceImage, timestamp}) => (
+                  <div key={id} className="project-card group">
               <div className="preview">
                 <img src={renderedImage || sourceImage}  alt="Project"/>
 

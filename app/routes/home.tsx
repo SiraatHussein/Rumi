@@ -22,20 +22,21 @@ export default function Home() {
     const newId =Date.now().toString(); // Generate a unique ID for the new visualizer route
     const name =`Residence ${newId}`; // You can customize the name as needed
 
-    const newItem ={
-      id: newId, name, sourceImage: base64Image,
-      rendredimage: undefined,
-      timestamp:Date.now()
-    }
+    const newItem: Pick<DesignItem, "id" | "name" | "sourceImage" | "timestamp"> = {
+      id: newId,
+      name,
+      sourceImage: base64Image,
+      timestamp: Date.now(),
+    };
 
-    const saved = await createProject({item: newItem, visibility: 'private'});
+    const saved = await createProject({ item: newItem, visibility: 'private' });
 
     if (!saved) {
       console.error("Failed to create project");
       return false;
     }
 
-    setProjects ((prev) => [newItem, ...prev]);
+    setProjects((prev) => [saved, ...prev]);
 
     navigate(`/visualizer/${newId}`, {
       state: {

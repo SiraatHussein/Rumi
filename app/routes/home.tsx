@@ -28,14 +28,14 @@ export default function Home() {
       timestamp:Date.now()
     }
 
-    const saved = await createProject({item: newItem, visibility: 'private'});
+    const saved = await createProject({ item: newItem, visibility: 'private' });
 
     if (!saved) {
       console.error("Failed to create project");
       return false;
     }
 
-    setProjects ((prev) => [newItem, ...prev]);
+    setProjects((prev) => [saved, ...prev]);
 
     navigate(`/visualizer/${newId}`, {
       state: {

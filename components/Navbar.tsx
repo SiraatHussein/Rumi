@@ -5,6 +5,7 @@ import { useOutletContext } from 'react-router';
 
 const Navbar = () => {
   const { isSignedIn, userName, signIn, signOut} = useOutletContext<AuthContext>()
+  console.log({ isSignedIn, userName });
  
   const handleAutoClick = async () => {
     if(isSignedIn){
@@ -64,8 +65,6 @@ const Navbar = () => {
               <a href= '#upload'className='cta'> Get Started</a>
           </>
         )}
-        
-
         
          
        </div>

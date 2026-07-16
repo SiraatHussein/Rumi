@@ -58,8 +58,8 @@ export default function App() {
 
       setAuthState({
         isSignedIn: !!user,
-        userName: user ?. username || null,
-        userId: user ?. uuid || null,
+        userName: user?.username || null,
+        userId: user?.uuid || null,
       })
       return !!user;
     } catch {
@@ -77,7 +77,7 @@ export default function App() {
     return await refreshAuth();
   }
 
-  const signOut =async () => {
+  const signOut = async () => {
      puterSignOut();
     return await refreshAuth();
   }
@@ -85,9 +85,7 @@ export default function App() {
   return (
      <main className="min-h-screen bg-background text-foreground relative z-10">
     <Outlet 
-    context={{
-      ...authState, refreshAuth, signIn, signOut
-    }}/>;
+    context={{ ...authState, refreshAuth, signIn, signOut}}/>
   </main>
   )
  

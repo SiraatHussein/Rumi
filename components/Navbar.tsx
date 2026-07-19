@@ -7,7 +7,7 @@ const Navbar = () => {
   const { isSignedIn, userName, signIn, signOut} = useOutletContext<AuthContext>()
   console.log({ isSignedIn, userName });
  
-  const handleAutoClick = async () => {
+  const handleAuthClick = async () => {
     if(isSignedIn){
       try{
         await signOut();
@@ -51,14 +51,14 @@ const Navbar = () => {
               <span className='greeting'>
                 {userName ?`Hi, ${userName}` : 'Signed in'}
               </span>
-              <Button  size ='sm'onClick={handleAutoClick} className='btn'>
+              <Button  size ='sm'onClick={handleAuthClick} className='btn'>
                   Log out 
               </Button>
           </>
           
         ): (
           <>
-              <Button onClick={handleAutoClick} size='sm' variant='ghost'>
+              <Button onClick={handleAuthClick} size='sm' variant='ghost'>
                   Log in
               </Button>
 

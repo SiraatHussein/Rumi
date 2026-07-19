@@ -4,8 +4,8 @@ import { ArrowRight, ArrowUpRight, Clock, Layers } from "lucide-react";
 import Button from "components/ui/Button";
 import Upload from  "components/Upload";
 import { useNavigate } from "react-router";
-import { useState } from "react";
-import { createProject } from "lib/puter.actions";
+import { useEffect, useRef, useState } from "react";
+import { createProject, getProjects } from "lib/puter.actions";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -17,8 +17,22 @@ export function meta({}: Route.MetaArgs) {
 export default function Home() {
    const navigate = useNavigate();
    const [projects, setProjects] = useState<DesignItem[]>([]);
+   const isCreatingProjectRef = useRef(false);
 
    const handleUploadComplete = async (base64Image: string) => {
+    try{
+      if(isCreatingProjectRef.current) return false;
+
+      useEffect(() => {
+        const fetchProjects = async () => {
+          const items = await getProjects();
+          setProjects(items)
+        }
+
+        fetchProjects();
+      }, [])
+    isCreatingProjectRef.current = true;
+
     const newId =Date.now().toString(); // Generate a unique ID for the new visualizer route
     const name =`Residence ${newId}`; // You can customize the name as needed
 
@@ -46,7 +60,10 @@ export default function Home() {
     });
 
     return true;
+  } finally{
+    isCreatingProjectRef.current = false;
   }
+ };
 
   return (
     <div className="home">
@@ -100,10 +117,9 @@ export default function Home() {
 
           <div className="projects-grid">
                {projects.map(({id, name, renderedImage, sourceImage, timestamp}) => (
-                  <div key={id} className="project-card group">
+                  <div key={id} className="project-card group" onClick={() => navigate (`/visualizer/${id}`)}>
               <div className="preview">
-                <img src={renderedImage || sourceImage}  alt="Project"/>
-
+                <img src={renderedImage || sourceImage} alt="Project"/>
                 <div className="badge">
                   <span>Community</span>
                 </div>

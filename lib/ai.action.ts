@@ -1,33 +1,22 @@
 import puter from "@heyputer/puter.js";
 import { ROOMIFY_RENDER_PROMPT } from "./constants";
 
-export async function fetchAsDataUrl(url: string): Promise<string> {
+export const fetchAsDataUrl = async (url: string): Promise<string> => {
   const response = await fetch(url);
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch image: ${response.status} ${response.statusText}`);
+    throw new Error(`Failed to fetch image: ${response.statusText}`);
   }
 
   const blob = await response.blob();
 
-  return await new Promise<string>((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader();
-
-    reader.onload = () => {
-      if (typeof reader.result === 'string') {
-        resolve(reader.result);
-      } else {
-        reject(new Error('Failed to read image as a data URL.'));
-      }
-    };
-
-    reader.onerror = () => {
-      reject(reader.error ?? new Error('Failed to read image as a data URL.'));
-    };
-
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.onerror = reject;
     reader.readAsDataURL(blob);
   });
-}
+};
 
 export const generate3DView = async ({sourceImage}: Generate3DViewParams) => {
     const dataUrl = sourceImage.startsWith('data:')

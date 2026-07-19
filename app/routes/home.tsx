@@ -4,8 +4,8 @@ import { ArrowRight, ArrowUpRight, Clock, Layers } from "lucide-react";
 import Button from "components/ui/Button";
 import Upload from  "components/Upload";
 import { useNavigate } from "react-router";
-import { useState } from "react";
-import { createProject } from "lib/puter.actions";
+import { useEffect, useRef, useState } from "react";
+import { createProject, getProjects } from "lib/puter.actions";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -17,17 +17,30 @@ export function meta({}: Route.MetaArgs) {
 export default function Home() {
    const navigate = useNavigate();
    const [projects, setProjects] = useState<DesignItem[]>([]);
+   const isCreatingProjectRef = useRef(false);
 
    const handleUploadComplete = async (base64Image: string) => {
+    try{
+      if(isCreatingProjectRef.current) return false;
+
+      useEffect(() => {
+        const fetchProjects = async () => {
+          const items = await getProjects();
+          setProjects(items)
+        }
+
+        fetchProjects();
+      }, [])
+    isCreatingProjectRef.current = true;
+
     const newId =Date.now().toString(); // Generate a unique ID for the new visualizer route
     const name =`Residence ${newId}`; // You can customize the name as needed
 
-    const newItem: Pick<DesignItem, "id" | "name" | "sourceImage" | "timestamp"> = {
-      id: newId,
-      name,
-      sourceImage: base64Image,
-      timestamp: Date.now(),
-    };
+    const newItem ={
+      id: newId, name, sourceImage: base64Image,
+      renderedImage: undefined,
+      timestamp:Date.now()
+    }
 
     const saved = await createProject({ item: newItem, visibility: 'private' });
 
@@ -46,9 +59,11 @@ export default function Home() {
       }
     });
 
-
     return true;
+  } finally{
+    isCreatingProjectRef.current = false;
   }
+ };
 
   return (
     <div className="home">
@@ -101,11 +116,10 @@ export default function Home() {
           </div>
 
           <div className="projects-grid">
-              {projects.map(({id, name, renderedImage, sourceImage, timestamp}) => (
-                  <div className="project-card group">
+               {projects.map(({id, name, renderedImage, sourceImage, timestamp}) => (
+                  <div key={id} className="project-card group" onClick={() => navigate (`/visualizer/${id}`)}>
               <div className="preview">
-                <img src={renderedImage || sourceImage}  alt="Project"/>
-
+                <img src={renderedImage || sourceImage} alt="Project"/>
                 <div className="badge">
                   <span>Community</span>
                 </div>

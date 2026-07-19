@@ -47,22 +47,21 @@ const DEFAULT_AUTH_STATE: AuthState ={
   isSignedIn: false,
   userName: null,
   userId: null,
-
 }
 export default function App() {
   const [authState, setAuthState] = useState<AuthState>(DEFAULT_AUTH_STATE);
-
   const refreshAuth = async ()=> {
     try {
       const user = await getCurrentUser();
 
       setAuthState({
         isSignedIn: !!user,
-        userName: user ?. username || null,
-        userId: user ?. uuid || null,
+        userName: user?.username || null,
+        userId: user?.uuid || null,
       })
       return !!user;
-    } catch {
+    } catch(e) {
+      console.error("refreshAuth failed:", e);
         setAuthState(DEFAULT_AUTH_STATE);
         return false;
     }
@@ -77,7 +76,7 @@ export default function App() {
     return await refreshAuth();
   }
 
-  const signOut =async () => {
+  const signOut = async () => {
      puterSignOut();
     return await refreshAuth();
   }
@@ -85,9 +84,7 @@ export default function App() {
   return (
      <main className="min-h-screen bg-background text-foreground relative z-10">
     <Outlet 
-    context={{
-      ...authState, refreshAuth, signIn, signOut
-    }}/>;
+    context={{ ...authState, refreshAuth, signIn, signOut}}/>
   </main>
   )
  

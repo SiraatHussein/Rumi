@@ -15,6 +15,7 @@ const Upload = ({ onComplete }: UploadProps) => {
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const { isSignedIn } = useOutletContext<AuthContext>();
+    
 
     useEffect(() => {
         return () => {
@@ -31,7 +32,7 @@ const Upload = ({ onComplete }: UploadProps) => {
 
     const processFile = useCallback((file: File) => {
         if (!isSignedIn) return;
-
+        
         setFile(file);
         setProgress(0);
 

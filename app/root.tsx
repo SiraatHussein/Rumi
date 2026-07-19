@@ -47,11 +47,9 @@ const DEFAULT_AUTH_STATE: AuthState ={
   isSignedIn: false,
   userName: null,
   userId: null,
-
 }
 export default function App() {
   const [authState, setAuthState] = useState<AuthState>(DEFAULT_AUTH_STATE);
-
   const refreshAuth = async ()=> {
     try {
       const user = await getCurrentUser();
@@ -62,7 +60,8 @@ export default function App() {
         userId: user?.uuid || null,
       })
       return !!user;
-    } catch {
+    } catch(e) {
+      console.error("refreshAuth failed:", e);
         setAuthState(DEFAULT_AUTH_STATE);
         return false;
     }

@@ -22,12 +22,20 @@ export default function Home() {
     const newId =Date.now().toString(); // Generate a unique ID for the new visualizer route
     const name =`Residence ${newId}`; // You can customize the name as needed
 
+<<<<<<< HEAD
     const newItem: Pick<DesignItem, "id" | "name" | "sourceImage" | "timestamp"> = {
       id: newId,
       name,
       sourceImage: base64Image,
       timestamp: Date.now(),
     };
+=======
+    const newItem ={
+      id: newId, name, sourceImage: base64Image,
+      renderedImage: undefined,
+      timestamp:Date.now()
+    }
+>>>>>>> 1185550 (changes)
 
     const saved = await createProject({ item: newItem, visibility: 'private' });
 
@@ -45,7 +53,6 @@ export default function Home() {
         name
       }
     });
-
 
     return true;
   }
@@ -101,8 +108,8 @@ export default function Home() {
           </div>
 
           <div className="projects-grid">
-              {projects.map(({id, name, renderedImage, sourceImage, timestamp}) => (
-                  <div className="project-card group">
+               {projects.map(({id, name, renderedImage, sourceImage, timestamp}) => (
+                  <div key={id} className="project-card group">
               <div className="preview">
                 <img src={renderedImage || sourceImage}  alt="Project"/>
 
